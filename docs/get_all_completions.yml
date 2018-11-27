@@ -1,0 +1,12 @@
+Get all Completed Challenges
+---
+definitions:
+  Completion:
+    type:Completion
+responses:
+  200:
+    description: Returns all Completions
+    schema:
+      $ref: '#/definitions/Completion'
+    examples:
+      {"data": [{"id": 1, "startTime": "1543294913.21117", "toFinishTime": "1543316509.4656", "endFinishTime": "1543294913.25996"}, {"id": 2, "startTime": "1543294913.22388", "toFinishTime": "1543295209.46561", "endFinishTime": "1543294913.27439"}, {"id": 3, "startTime": "1543294913.23469", "toFinishTime": "1543295209.46561", "endFinishTime": "1543294913.29061"}, {"id": 4, "startTime": "1543294913.24621", "toFinishTime": "1543295209.46561", "endFinishTime": "1543294913.30432"}]}

@@ -1,0 +1,12 @@
+Get all Challenges from the datastore
+---
+definitions:
+  Challenge:
+    type:object
+responses:
+  200:
+    description: Returns a list of Challenge Objects
+    schema:
+      $ref: '#/definitions/Challenge'
+    examples:
+      {"data": [{"id": 4, "text": "Learn the Heimlich Manuever", "imgURL": "https://giphy.com/embed/uyPIzD5oee13i", "timeToFinish": "six_hours"}, {"id": 5, "text": "Learn to Tie a Square Knot", "imgURL": "https://giphy.com/embed/aAJqEavIiRZOU", "timeToFinish": "five_minutes"}]}

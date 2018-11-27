@@ -1,0 +1,27 @@
+Create a new User
+---
+parameters:
+  - name: body
+    in: body
+    required: True
+    schema:
+          required:
+            username,
+            password
+          properties:
+            username:
+              type: string
+              description: Inputted username
+            password:
+              type: string
+              description: Inputted password 
+definitions:
+  User:
+    type:object
+responses:
+  200:
+    description: Returns the newly created User
+    schema:
+      $ref: '#/definitions/User'
+    examples:
+      {"success": true, "data": {"id": 3, "username": "abc", "password": "123", "streak": 0, "count_completed_challenges": 0, "last_completed_challenge": -1}}

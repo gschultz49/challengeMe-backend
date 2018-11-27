@@ -1,0 +1,22 @@
+Create a new Challenge
+---
+parameters:
+      - name: text
+        in: body
+        type: string
+        description: The text of the challenge
+      - name: timeToFinish
+        in: body
+        type: string
+        enum: ['five_minutes', 'six_hours', 'one_day'] 
+        description: The time amount of time to finish the challenge in a UNIX, either "five_minutes", "six_hours", or "one_day"
+definitions:
+  Challenge:
+    type:object
+responses:
+  200:
+    description: A single Challenge Object
+    schema:
+      $ref: '#/definitions/Challenge'
+    examples:
+      {"data": {"id": 6, "text": "BBBB", "imgURL": "https://giphy.com/embed/xT0xeEfTtq9JtIhL7W", "timeToFinish": "five_minutes"}}

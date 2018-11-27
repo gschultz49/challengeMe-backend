@@ -1,0 +1,24 @@
+Get specific User from the datastore by id
+---
+parameters:
+  - name: body
+    in: body
+    required: True
+    schema:
+          required:
+            user_id
+          properties:
+            user_id:
+              type: integer
+              description: User ID from database
+definitions:
+  User:
+    type:object
+responses:
+  200:
+    description: A single User Object
+    schema:
+      $ref: '#/definitions/User'
+    examples:
+      res:
+        { "data": {"id": 2, "username": "martha_p", "password": "1865", "streak": 1, "count_completed_challenges": 1, "last_completed_challenge": 1}}

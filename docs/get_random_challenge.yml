@@ -1,0 +1,12 @@
+Get a random challenge from the Challenges table
+---
+definitions:
+  Challenge:
+    type:object
+responses:
+  200:
+    description: A single Challenge Object
+    schema:
+      $ref: '#/definitions/Challenge'
+    examples:
+      {"data": {"id": 6, "text": "BBBB", "imgURL": "https://giphy.com/embed/xT0xeEfTtq9JtIhL7W", "timeToFinish": "five_minutes"}}

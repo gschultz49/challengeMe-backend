@@ -1,0 +1,18 @@
+Search all possible challenges
+---
+parameters:
+      - name: q
+        in: path
+        type: string
+        description: The search query, can be of any length
+definitions:
+  Challenge:
+    type:object
+responses:
+  200:
+    description: A list of Challenge Objects
+    schema:
+      $ref: '#/definitions/Challenge'
+    examples:
+      {res:{"success": true, "data": [{"id": 4, "text": "Learn the Heimlich Manuever", "imgURL": "https://giphy.com/embed/uyPIzD5oee13i", "timeToFinish": "six_hours"}, {"id": 5, "text": "Learn to Tie a Square Knot", "imgURL": "https://giphy.com/embed/aAJqEavIiRZOU", "timeToFinish": "five_minutes"}]}}
+      

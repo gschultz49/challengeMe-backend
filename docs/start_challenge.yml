@@ -1,0 +1,27 @@
+Start a challenge with the given user
+---
+parameters:
+  - name: body
+    in: body
+    required: True
+    schema:
+          required:
+            user_id,
+            challenge_id
+          properties:
+            user_id:
+              type: integer
+              description: user_id from database
+            challenge_id:
+              type: integer
+              description: challenge_id from database
+definitions:
+  Completion:
+    type:object
+responses:
+  200:
+    description: Returns the newly started Completion, note the endFinishTime is empty, this is finished when the person completes the challenge 
+    schema:
+      $ref: '#/definitions/Completion'
+    examples:
+      {"data": {"id": 5, "startTime": "1543296637.13657", "toFinishTime": "1543318167.5658", "endFinishTime": "NONE"}}

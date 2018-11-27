@@ -1,0 +1,17 @@
+Delete specific User from the datastore by id
+---
+parameters:
+      - name: user_id
+        in: path
+        type: integer
+        description: The database ID of the User
+definitions:
+  User:
+    type:object
+responses:
+  200:
+    description: A single User Object
+    schema:
+      $ref: '#/definitions/User'
+    examples:
+      {"data": {"id": 6, "text": "BBBB", "imgURL": "https://giphy.com/embed/xT0xeEfTtq9JtIhL7W", "timeToFinish": "five_minutes"}}

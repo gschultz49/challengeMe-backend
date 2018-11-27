@@ -1,0 +1,23 @@
+Get the number of challenges completed for a user
+---
+parameters:
+  - name: body
+    in: body
+    required: True
+    schema:
+          required:
+            user_id
+          properties:
+            user_id:
+              type: integer
+              description: user_id from database
+definitions:
+  Completion:
+    type:object
+responses:
+  200:
+    description: Returns the integer of the count
+    schema:
+      $ref: '#/definitions/Completion'
+    examples:
+      {"data": [{"text": "Start a conversation with a stranger", "imgURL": "https://giphy.com/embed/3o6Zto0SC5IbWKTbWw", "timeToFinish": "five_minutes"}]}

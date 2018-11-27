@@ -1,0 +1,23 @@
+Get all challenges completed by given User
+---
+parameters:
+  - name: body
+    in: body
+    required: True
+    schema:
+          required:
+            user_id,
+          properties:
+            user_id:
+              type: integer
+              description: user_id from database
+definitions:
+  Challenge:
+    type:object
+responses:
+  200:
+    description: Returns a list of Challenge objects
+    schema:
+      $ref: '#/definitions/Challenge'
+    examples:
+      {"data": [{"text": "Start a conversation with a stranger", "imgURL": "https://giphy.com/embed/3o6Zto0SC5IbWKTbWw", "timeToFinish": "five_minutes"}]}
