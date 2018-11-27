@@ -246,7 +246,7 @@ def complete_challenge():
     else:
         endFinish = datetime.datetime.utcfromtimestamp(float(last_completed_challenge.endFinishTime)) 
         current_time = datetime.datetime.utcnow()
-        one_day_away = (endFinish + datetime.timedelta(hours=1))
+        one_day_away = (endFinish + datetime.timedelta(days=1))
         
         if current_time > one_day_away:
             user.streak += 1
