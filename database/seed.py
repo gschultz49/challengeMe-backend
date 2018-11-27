@@ -150,6 +150,5 @@ class Seeder(object):
         requests.post(self.LOCAL_URL + '/api/users/complete_challenge/', data=json.dumps(greg_start_third_challenge))
         requests.post(self.LOCAL_URL + '/api/users/complete_challenge/', data=json.dumps(greg_start_fifth_challenge))
 
-
 if __name__ == '__main__':
     Seeder()

@@ -1,6 +1,6 @@
 import json, os, requests, datetime
 from models import db, User, Challenge, Completion
-from sqlalchemy.sql.expression import func, select
+from sqlalchemy.sql.expression import func
 from flask import Flask, request
 from flasgger import Swagger, swag_from
 
@@ -14,8 +14,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 
 # weirdly not working if the environ key was made in a different directory?
-# GIPHY_API_KEY = os.environ['GIPHY_API_KEY']
-GIPHY_API_KEY = 'Dp9D8D67rvtcpLqiMJQQZ02mxmIyuTZf'
+GIPHY_API_KEY = os.environ['GIPHY_API_KEY']
 GIPHY_SEARCH_URL = 'http://api.giphy.com/v1/gifs/search'
 
 TIME_DELAYS = {
@@ -42,7 +41,7 @@ def get_all_challenges():
 def get_challenge_by_id(challenge_id):
     challenge = Challenge.query.filter_by(id=challenge_id).first()
     # invalid challenge id
-    print (challenge)
+    
     if challenge is None:
         return json.dumps({'success': False, 'error': 'Invalid challenge ID! Cannot get challenge'}), 404 
         # only if this is a valid challenge ID
@@ -117,7 +116,7 @@ def get_random_challenge():
     r = Challenge.query.order_by(func.random()).limit(1).all()
     return json.dumps({'success': True, 'data': r[0].serialize()}), 200
 
-# @app.route('/api/challenges/completed_challenges/', methods=['GET'])
+# @app.route('/api/challenges/popular_challenges/', methods=['GET'])
 # def show_popular_challenges():
 
 
@@ -129,6 +128,21 @@ def get_all_users():
     res = {'success': True, 'data':[user.serialize() for user in users] }
     return json.dumps(res), 200
 
+
+@app.route('/api/users/', methods = ['POST'])
+@swag_from('../../docs/get_user_by_id.yml')
+def get_user_by_id():
+    dat = json.loads(request.data)
+
+    user_id = dat.get("user_id")
+    user = User.query.filter_by(id=user_id).first()
+    # invalid user id
+    if user is None:
+        return json.dumps({'success': False, 'error': 'Invalid user ID! Cannot get User'}), 404 
+    # only if this is a valid user ID
+    else:
+        return json.dumps({'success': True, 'data': user.serialize()}), 200
+    
 
 @app.route('/api/users/signup/', methods=['POST'])
 @swag_from('../../docs/new_signup.yml')
@@ -242,6 +256,9 @@ def complete_challenge():
     # update users last completed challenge to this one every time
     user.last_completed_challenge = challenge_id
 
+    # increment count of users completed challenges 
+    user.count_completed_challenges += 1
+
     db.session.commit()
 
     return json.dumps({'success': True, 'data': completed.serialize()}), 200
@@ -255,17 +272,9 @@ def get_user_completed_challenges():
     user_id = dat.get("user_id")
     # session, cookies? 
     # Leveraging the users ID from the User table so need some way of storing
-    
-    # completions = Completion.query.filter_by(user_id=user_id)
 
-    # print (completions)
-    # user_completions = completions.filter(completions, Completion.challenge_id == Challenge.id)
-    # print (user_completions)
-    # q = "select * from Challenges join Completions.challenge_id on Challenges.id where Completions.user_id = {0}".format(user_id)
     q = "select * from Challenges inner join Completions on Challenges.id = Completions.challenge_id where Completions.user_id = {0} ".format(user_id)
     user_completions = db.engine.execute(q)
-    # user_completions = session.query(Completion).join(Challenge, Completion.user_id==Challenge.id)
-    print(user_completions)
     
     serialized= []
     for row in user_completions:
@@ -286,27 +295,6 @@ def get_user_completed_challenges():
     else:
         return json.dumps({'success': False, 'error': 'No Completed Challenges'}), 404 
 
-@app.route('/api/users/count_completed_challenges/', methods=['POST'])
-@swag_from('../../docs/get_user_completed_challenges.yml')
-def get_count_user_completed_challenges():
-    dat = json.loads(request.data)
-    user_id = dat.get("user_id")
-    # session, cookies? 
-    # Leveraging the users ID from the User table so need some way of storing
-    
-    completions = Completion.query.filter_by(user_id=user_id).filter_by(completed=True).all()
-    print (completions)
-    print (len(completions))
-    
-
-    if completions is not None:
-        res = {
-            'success': True,
-            'data': len(completions)
-        }
-        return json.dumps(res), 200
-    else:
-        return json.dumps({'success': False, 'error': 'No Completed Challenges'}), 404 
 
 # def user_unfinished_challenges
 

@@ -14,6 +14,7 @@ class User(db.Model):
     # might not be necessary with the completions table
     # totalFinishedChallenges = db.Column(db.Integer, default=0)
     streak = db.Column(db.Integer, default=0)
+    count_completed_challenges = db.Column(db.Integer, default=0)
     last_completed_challenge = db.Column(db.Integer, default = -1)
 
 
@@ -26,6 +27,7 @@ class User(db.Model):
         # self.imgURL = kwargs.get('imgURL', '')
         # self.totalFinishedChallenges = kwargs.get('totalFinishedChallenges', 0)
         self.streak = kwargs.get('streak', 0)
+        self.count_completed_challenges = kwargs.get('count_completed_challenges', 0)
         self.last_completed_challenge = kwargs.get('last_completed_challenge', -1)
     
     def serialize (self):
@@ -38,6 +40,7 @@ class User(db.Model):
             # 'imgURL': self.imgURL,
             # 'totalFinishedChallenges': self.totalFinishedChallenges,
             'streak': self.streak,
+            'count_completed_challenges': self.count_completed_challenges,
             'last_completed_challenge': self.last_completed_challenge
         }
 
