@@ -237,8 +237,6 @@ def complete_challenge():
 
     # finish the challenge 
     completed.endFinishTime = datetime.datetime.now().timestamp()
-    #kinda not needed, fix later
-    completed.completed = True
     #will need to have an order by with this to make it such that you can do the same challenge multiple times
     last_completed_challenge = Completion.query.filter_by(id = user.last_completed_challenge).first()
     #if you've never completed a challenge before, auto increment streak
@@ -293,6 +291,34 @@ def get_user_completed_challenges():
     else:
         return json.dumps({'success': False, 'error': 'No Completed Challenges'}), 404 
 
-# def user_unfinished_challenges
+@app.route('/api/users/incomplete_challenges/', methods=['POST'])
+@swag_from('../../docs/get_user_incomplete_challenges.yml')
+def get_user_incomplete_challenges():
+    dat = json.loads(request.data)
+    user_id = dat.get("user_id")
+
+    q = "select * from Challenges inner join Completions on Challenges.id = Completions.challenge_id where Completions.user_id = {0} AND Completions.endFinishTime = 'NONE' ".format(user_id)
+    user_completions = db.engine.execute(q)
+    
+    serialized= []
+    for row in user_completions:
+        serialized.append(
+            {
+                "text": row.text,
+                "imgURL": row.imgURL,
+                "timeToFinish": row.timeToFinish
+            }
+        )
+
+    if serialized is not None:
+        res = {
+            'success': True,
+            'data': serialized
+        }
+        return json.dumps(res), 200
+    else:
+        return json.dumps({'success': False, 'error': 'No Completed Challenges'}), 404 
+
+
 
 

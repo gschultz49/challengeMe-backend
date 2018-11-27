@@ -74,7 +74,6 @@ class Completion(db.Model):
     endFinishTime = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable = False)
     challenge_id = db.Column(db.Integer, db.ForeignKey('Challenges.id'), nullable = False)
-    completed = db.Column(db.Boolean)
 
     def __init__ (self, **kwargs):
         self.startTime = kwargs.get('startTime')
@@ -83,13 +82,12 @@ class Completion(db.Model):
 
         self.user_id = kwargs.get('user_id')
         self.challenge_id = kwargs.get('challenge_id')
-        self.completed = kwargs.get('completed', False)
 
     def serialize (self):
         return {
             'id' : self.id,
             'startTime': self.startTime,
             'toFinishTime': self.toFinishTime,
-            'endFinishTime': self.endFinishTime
+            'endFinishTime': self.endFinishTime,
             # dont serialize the foreign key
         }
