@@ -35,7 +35,6 @@ def get_all_challenges():
     res = {'success': True, 'data':[challenge.serialize() for challenge in challenges] }
     return json.dumps(res), 200
 
-
 @app.route('/api/challenges/<int:challenge_id>/', methods=['GET'])
 @swag_from('../../docs/get_challenge_by_id.yml')
 def get_challenge_by_id(challenge_id):
@@ -47,7 +46,6 @@ def get_challenge_by_id(challenge_id):
     else:
         return json.dumps({'success': True, 'data': challenge.serialize()}), 200
         
-
 @app.route('/api/challenges/', methods=['POST'])
 @swag_from('../../docs/create_challenge.yml')
 def create_challenge():
@@ -91,12 +89,10 @@ def search_challenges(q):
 
     return json.dumps(res), 200
 
-
 @app.route('/api/challenges/<int:challenge_id>/', methods=['DELETE'])
 @swag_from('../../docs/delete_challenge_by_id.yml')
 def delete_challenge_by_id(challenge_id):
     challenge = Challenge.query.filter_by(id=challenge_id).first()
-    
     # only if this is a valid challenge ID
     if challenge is not None:
         db.session.delete(challenge)
@@ -118,14 +114,12 @@ def get_random_challenge():
 # def show_popular_challenges():
 
 
-
 @app.route('/api/users/', methods = ['GET'])
 @swag_from('../../docs/get_all_users.yml')
 def get_all_users():
     users = User.query.all()
     res = {'success': True, 'data':[user.serialize() for user in users] }
     return json.dumps(res), 200
-
 
 @app.route('/api/users/', methods = ['POST'])
 @swag_from('../../docs/get_user_by_id.yml')
@@ -139,7 +133,19 @@ def get_user_by_id():
     # only if this is a valid user ID
     else:
         return json.dumps({'success': True, 'data': user.serialize()}), 200
-    
+
+@app.route('/api/users/<int:user_id>/', methods=['DELETE'])
+@swag_from('../../docs/delete_user_by_id.yml')
+def delete_user_by_id(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    # only if this is a valid user ID
+    if user is not None:
+        db.session.delete(user)
+        db.session.commit()
+        return json.dumps({'success': True, 'data': user.serialize()}), 200
+    # invalid user id
+    else:
+        return json.dumps({'success': False, 'error': 'Invalid user ID! Cannot delete user'}), 404     
 
 @app.route('/api/users/signup/', methods=['POST'])
 @swag_from('../../docs/new_signup.yml')
@@ -185,7 +191,6 @@ def get_all_completions():
     res = {'success': True, 'data':[completion.serialize() for completion in completions] }
     return json.dumps(res), 200
 
-
 @app.route('/api/users/start_challenge/', methods=['POST'])
 @swag_from('../../docs/start_challenge.yml')
 def start_challenge():
@@ -217,7 +222,6 @@ def start_challenge():
 
     return json.dumps(res), 201
 
-
 @app.route('/api/users/complete_challenge/', methods=['POST'])
 @swag_from('../../docs/complete_challenge.yml')
 def complete_challenge():
@@ -227,6 +231,10 @@ def complete_challenge():
 
     user = User.query.filter_by(id = user_id).first()
     completed = Completion.query.filter_by(user_id = user_id).filter_by(challenge_id = challenge_id).first()
+
+    if completed is None:
+        return json.dumps({'success': False, 'error': 'User has never started this challenge'}), 404 
+
     # finish the challenge 
     completed.endFinishTime = datetime.datetime.now().timestamp()
     #kinda not needed, fix later
@@ -254,7 +262,6 @@ def complete_challenge():
     db.session.commit()
 
     return json.dumps({'success': True, 'data': completed.serialize()}), 200
-
 
 @app.route('/api/users/completed_challenges/', methods=['POST'])
 @swag_from('../../docs/get_user_completed_challenges.yml')
@@ -285,7 +292,6 @@ def get_user_completed_challenges():
         return json.dumps(res), 200
     else:
         return json.dumps({'success': False, 'error': 'No Completed Challenges'}), 404 
-
 
 # def user_unfinished_challenges
 

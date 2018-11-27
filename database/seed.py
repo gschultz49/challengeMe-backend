@@ -24,8 +24,6 @@ class Seeder(object):
         self.challenge_seeds = [ 
             {
              'text': "Start a conversation with a stranger",
-             #X time aways as a UNIX timestamp   
-             # 'timeToFinish': 'one_day'
              'timeToFinish': "five_minutes"
             },
             {

@@ -18,7 +18,6 @@ class User(db.Model):
     last_completed_challenge = db.Column(db.Integer, default = -1)
 
 
-
     def __init__ (self, **kwargs):
         self.username = kwargs.get('username', '')
         self.password = kwargs.get('password', '')
