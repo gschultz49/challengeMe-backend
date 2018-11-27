@@ -1,0 +1,19 @@
+Get specific Challenge from the datastore by id
+---
+parameters:
+      - name: challenge_id
+        in: path
+        type: int
+        required: true
+definitions:
+  Challenge:
+    type:object
+responses:
+  200:
+    description: A single Challenge Object
+    schema:
+      $ref: '#/definitions/Challenge'
+    examples:
+      res: [
+        {id: 1}
+      ]
