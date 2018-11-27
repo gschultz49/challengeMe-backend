@@ -41,7 +41,6 @@ def get_all_challenges():
 def get_challenge_by_id(challenge_id):
     challenge = Challenge.query.filter_by(id=challenge_id).first()
     # invalid challenge id
-    
     if challenge is None:
         return json.dumps({'success': False, 'error': 'Invalid challenge ID! Cannot get challenge'}), 404 
         # only if this is a valid challenge ID
@@ -52,11 +51,9 @@ def get_challenge_by_id(challenge_id):
 @app.route('/api/challenges/', methods=['POST'])
 @swag_from('../../docs/create_challenge.yml')
 def create_challenge():
-
     dat = json.loads(request.data)
-
     text = dat.get("text")
-
+    
     GIPHY_SEARCH_PARAMETERS = {
         'api_key': GIPHY_API_KEY,
         'limit': 1,
@@ -99,6 +96,7 @@ def search_challenges(q):
 @swag_from('../../docs/delete_challenge_by_id.yml')
 def delete_challenge_by_id(challenge_id):
     challenge = Challenge.query.filter_by(id=challenge_id).first()
+    
     # only if this is a valid challenge ID
     if challenge is not None:
         db.session.delete(challenge)
@@ -133,7 +131,6 @@ def get_all_users():
 @swag_from('../../docs/get_user_by_id.yml')
 def get_user_by_id():
     dat = json.loads(request.data)
-
     user_id = dat.get("user_id")
     user = User.query.filter_by(id=user_id).first()
     # invalid user id
@@ -192,7 +189,6 @@ def get_all_completions():
 @app.route('/api/users/start_challenge/', methods=['POST'])
 @swag_from('../../docs/start_challenge.yml')
 def start_challenge():
-
     dat = json.loads(request.data)
     
     user_id = dat.get("user_id")
@@ -228,19 +224,15 @@ def complete_challenge():
     dat = json.loads(request.data)
     user_id = dat.get("user_id")
     challenge_id = dat.get("challenge_id")
-    
+
     user = User.query.filter_by(id = user_id).first()
     completed = Completion.query.filter_by(user_id = user_id).filter_by(challenge_id = challenge_id).first()
-    
     # finish the challenge 
     completed.endFinishTime = datetime.datetime.now().timestamp()
-    
     #kinda not needed, fix later
     completed.completed = True
-
     #will need to have an order by with this to make it such that you can do the same challenge multiple times
     last_completed_challenge = Completion.query.filter_by(id = user.last_completed_challenge).first()
-
     #if you've never completed a challenge before, auto increment streak
     if last_completed_challenge is None:
         user.streak += 1
@@ -267,7 +259,6 @@ def complete_challenge():
 @app.route('/api/users/completed_challenges/', methods=['POST'])
 @swag_from('../../docs/get_user_completed_challenges.yml')
 def get_user_completed_challenges():
-
     dat = json.loads(request.data)
     user_id = dat.get("user_id")
     # session, cookies? 
