@@ -18,12 +18,6 @@ app.config['SQLALCHEMY_ECHO'] = False
 GIPHY_API_KEY = 'Dp9D8D67rvtcpLqiMJQQZ02mxmIyuTZf'
 GIPHY_SEARCH_URL = 'http://api.giphy.com/v1/gifs/search'
 
-# will be used on the Completion table to calculate differences in time per user
-# TIME_DELAYS = {
-#     "one_day": (datetime.datetime.now() + datetime.timedelta(days=1)).timestamp(),
-#     "six_hours": (datetime.datetime.now() + datetime.timedelta(hours=6)).timestamp(),
-#     "five_minutes": (datetime.datetime.now() + datetime.timedelta(minutes=5)).timestamp(),
-# }
 TIME_DELAYS = {
     "one_day": (datetime.datetime.now() + datetime.timedelta(days=1)).timestamp(),
     "six_hours": (datetime.datetime.now() + datetime.timedelta(hours=6)).timestamp(),
@@ -90,6 +84,7 @@ def create_challenge():
     return json.dumps(res), 201
 
 @app.route('/api/challenges/search/<string:q>', methods=['GET'])
+@swag_from('../../docs/search_challenges.yml')
 def search_challenges(q):
     results = Challenge.query.filter(Challenge.text.like("%"+q+"%")).all()
 
@@ -128,6 +123,7 @@ def get_random_challenge():
 
 
 @app.route('/api/users/', methods = ['GET'])
+@swag_from('../../docs/get_all_users.yml')
 def get_all_users():
     users = User.query.all()
     res = {'success': True, 'data':[user.serialize() for user in users] }
@@ -135,6 +131,7 @@ def get_all_users():
 
 
 @app.route('/api/users/signup/', methods=['POST'])
+@swag_from('../../docs/new_signup.yml')
 def new_signup():
     dat = json.loads(request.data)
 
@@ -154,6 +151,7 @@ def new_signup():
 
 
 @app.route('/api/users/login/', methods=['POST'])
+@swag_from('../../docs/login_user.yml')
 def login_user():
     dat = json.loads(request.data)
     
@@ -170,6 +168,7 @@ def login_user():
 
 
 @app.route('/api/users/completions/', methods = ['GET'])
+@swag_from('../../docs/get_all_completions.yml')
 def get_all_completions():
     completions = Completion.query.all()
     res = {'success': True, 'data':[completion.serialize() for completion in completions] }
@@ -177,6 +176,7 @@ def get_all_completions():
 
 
 @app.route('/api/users/start_challenge/', methods=['POST'])
+@swag_from('../../docs/start_challenge.yml')
 def start_challenge():
 
     dat = json.loads(request.data)
@@ -209,6 +209,7 @@ def start_challenge():
 
 
 @app.route('/api/users/complete_challenge/', methods=['POST'])
+@swag_from('../../docs/complete_challenge.yml')
 def complete_challenge():
     dat = json.loads(request.data)
     user_id = dat.get("user_id")
@@ -221,7 +222,7 @@ def complete_challenge():
     completed.endFinishTime = datetime.datetime.now().timestamp()
     
     #kinda not needed, fix later
-    completed.status = True
+    completed.completed = True
 
     #will need to have an order by with this to make it such that you can do the same challenge multiple times
     last_completed_challenge = Completion.query.filter_by(id = user.last_completed_challenge).first()
@@ -247,42 +248,66 @@ def complete_challenge():
 
 
 @app.route('/api/users/completed_challenges/', methods=['POST'])
+@swag_from('../../docs/get_user_completed_challenges.yml')
 def get_user_completed_challenges():
+
     dat = json.loads(request.data)
-    user_id = dat.get("id")
+    user_id = dat.get("user_id")
     # session, cookies? 
     # Leveraging the users ID from the User table so need some way of storing
     
-    completions = Completion.query.filter_by(user_id=user_id)
+    # completions = Completion.query.filter_by(user_id=user_id)
 
-    user_completions = Challenge.join(completions, completions.challenge_id == Challenge.id)
+    # print (completions)
+    # user_completions = completions.filter(completions, Completion.challenge_id == Challenge.id)
+    # print (user_completions)
+    # q = "select * from Challenges join Completions.challenge_id on Challenges.id where Completions.user_id = {0}".format(user_id)
+    q = "select * from Challenges inner join Completions on Challenges.id = Completions.challenge_id where Completions.user_id = {0} ".format(user_id)
+    user_completions = db.engine.execute(q)
+    # user_completions = session.query(Completion).join(Challenge, Completion.user_id==Challenge.id)
+    print(user_completions)
+    
+    serialized= []
+    for row in user_completions:
+        serialized.append(
+            {
+                "text": row.text,
+                "imgURL": row.imgURL,
+                "timeToFinish": row.timeToFinish
+            }
+        )
 
-    if user_completions is not None:
+    if serialized is not None:
         res = {
             'success': True,
-            'data': [completion.serialize() for completion in user_completions]
+            'data': serialized
         }
         return json.dumps(res), 200
     else:
         return json.dumps({'success': False, 'error': 'No Completed Challenges'}), 404 
 
 @app.route('/api/users/count_completed_challenges/', methods=['POST'])
+@swag_from('../../docs/get_user_completed_challenges.yml')
 def get_count_user_completed_challenges():
     dat = json.loads(request.data)
-    user_id = dat.get("id")
+    user_id = dat.get("user_id")
     # session, cookies? 
     # Leveraging the users ID from the User table so need some way of storing
     
-    completions = Completion.query.filter_by(user_id=user_id).count()   
+    completions = Completion.query.filter_by(user_id=user_id).filter_by(completed=True).all()
+    print (completions)
+    print (len(completions))
+    
 
     if completions is not None:
         res = {
             'success': True,
-            'data': completions
+            'data': len(completions)
         }
         return json.dumps(res), 200
     else:
         return json.dumps({'success': False, 'error': 'No Completed Challenges'}), 404 
 
+# def user_unfinished_challenges
 
 
