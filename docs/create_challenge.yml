@@ -1,15 +1,20 @@
 Create a new Challenge
 ---
 parameters:
-      - name: text
-        in: body
-        type: string
-        description: The text of the challenge
-      - name: timeToFinish
-        in: body
-        type: string
-        enum: ['five_minutes', 'six_hours', 'one_day'] 
-        description: The time amount of time to finish the challenge in a UNIX, either "five_minutes", "six_hours", or "one_day"
+  - name: body
+    in: body
+    required: True
+    schema:
+          required:
+            text,
+            timeToFinish
+          properties:
+            text:
+              type: string
+              description: The text of the challenge
+            timeToFinish:
+              type: string
+              description: The time amount of time to finish the challenge in a UNIX, either "five_minutes", "six_hours", or "one_day"
 definitions:
   Challenge:
     type:object

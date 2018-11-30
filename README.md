@@ -2,7 +2,13 @@ This is the backend for the ChallengeMe application for the Cornell AppDev final
 
 To set this up
 
-`rm CHALLENGEME.db`
+`pip install -r requirements.txt`
+
 `sh run.sh`
+
+this will set up the database with some data
 `python seed.py`
+
+if you want a fresh restart, `rm CHALLENGE.db` and re run `python seed.py`
+
 

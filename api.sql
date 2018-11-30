@@ -1,3 +1,0 @@
--- https://bitwiser.in/2015/09/09/add-google-login-in-flask.html
--- https://developers.facebook.com/docs/graph-api/reference/user/friends/
--- https://github.com/rochacbruno/flasgger
