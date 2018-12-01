@@ -24,4 +24,4 @@ responses:
     schema:
       $ref: '#/definitions/User'
     examples:
-      {"success": true, "data": {"id": 3, "username": "abc", "password": "123", "streak": 0, "count_completed_challenges": 0, "last_completed_challenge": -1}}
+      {"success": true, "data": {"id": 3, "username": "abc", "streak": 0, "count_completed_challenges": 0, "last_completed_challenge": -1,}}

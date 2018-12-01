@@ -1,0 +1,18 @@
+Search all users
+---
+parameters:
+      - name: q
+        in: path
+        type: string
+        description: The search query, can be of any length
+definitions:
+  User:
+    type:object
+responses:
+  200:
+    description: A list of User Objects
+    schema:
+      $ref: '#/definitions/User'
+    examples:
+      {"success": true, "data": [{"id": 1, "username": "gschultz49", "streak": 1, "count_completed_challenges": 3, "last_completed_challenge": 5, "pic": "https://avatars1.githubusercontent.com/u/20246620?s=400&v=4"}]}
+      

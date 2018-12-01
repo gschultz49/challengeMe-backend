@@ -14,7 +14,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 
 # weirdly not working if the environ key was made in a different directory?
-# GIPHY_API_KEY='Dp9D8D67rvtcpLqiMJQQZ02mxmIyuTZf'
 GIPHY_API_KEY = os.environ['GIPHY_API_KEY']
 GIPHY_SEARCH_URL = 'http://api.giphy.com/v1/gifs/search'
 
@@ -96,6 +95,7 @@ def search_challenges(q):
     }
 
     return json.dumps(res), 200
+
 
 @app.route('/api/challenges/<int:challenge_id>/', methods=['DELETE'])
 @swag_from('docs/delete_challenge_by_id.yml')
@@ -335,6 +335,17 @@ def get_user_incomplete_challenges():
         return json.dumps({'success': False, 'error': 'No Completed Challenges'}), 404 
 
 
+@app.route('/api/users/search/<string:q>', methods=['GET'])
+@swag_from('docs/search_users.yml')
+def search_users(q):
+    results = User.query.filter(User.username.like("%"+q+"%")).all()
+
+    res = {
+        'success': True,
+        'data': [result.serialize() for result in results] 
+    }
+
+    return json.dumps(res), 200
 
 
 
