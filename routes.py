@@ -1,4 +1,4 @@
-import json, os, requests, datetime
+import json, os, requests, datetime, random
 from models import db, User, Challenge, Completion
 from sqlalchemy.sql.expression import func
 from flask import Flask, request
@@ -14,6 +14,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 
 # weirdly not working if the environ key was made in a different directory?
+# GIPHY_API_KEY='Dp9D8D67rvtcpLqiMJQQZ02mxmIyuTZf'
 GIPHY_API_KEY = os.environ['GIPHY_API_KEY']
 GIPHY_SEARCH_URL = 'http://api.giphy.com/v1/gifs/search'
 
@@ -21,6 +22,13 @@ TIME_DELAYS = {
     "one_day": (datetime.datetime.now() + datetime.timedelta(days=1)).timestamp(),
     "six_hours": (datetime.datetime.now() + datetime.timedelta(hours=6)).timestamp(),
     "five_minutes": (datetime.datetime.now() + datetime.timedelta(minutes=5)).timestamp(),
+}
+
+INSTRUCTORS = {
+  "mindy": "https://avatars1.githubusercontent.com/u/20246620?s=400&v=4",
+  "young": "https://avatars2.githubusercontent.com/u/8889311?s=400&v=4",
+  "kevin": "https://avatars2.githubusercontent.com/u/26048121?s=400&v=4",
+  "megan": "https://avatars2.githubusercontent.com/u/22579863?s=400&v=4"  
 }
 
 db.init_app(app)
@@ -154,7 +162,9 @@ def new_signup():
 
     user = User(
         username = dat.get("username"),
-        password = dat.get("password")
+        password = User.hash_password(dat.get("password")),
+        # storing images is annoying and we <3 our instructors
+        pic = random.choice(list(INSTRUCTORS.values()))
     )
 
     db.session.add(user)
@@ -171,13 +181,18 @@ def new_signup():
 @swag_from('docs/login_user.yml')
 def login_user():
     dat = json.loads(request.data)
+
+    # q = User.query.filter_by(username = dat.get("username")).filter_by(password = dat.get("password")).first()
     
-    q = User.query.filter_by(username = dat.get("username")).filter_by(password = dat.get("password")).first()
+    q = User.query.filter_by(username = dat.get("username")).first()
     
-    if q is not None:
+    input_password = dat.get("password")
+    user = q.serialize()
+
+    if User.verify_password(user["password"], input_password):
         res = {
             'success': True,
-            'data': q.serialize()
+            'data': user
         }
         return json.dumps(res), 200
     else:
@@ -318,6 +333,7 @@ def get_user_incomplete_challenges():
         return json.dumps(res), 200
     else:
         return json.dumps({'success': False, 'error': 'No Completed Challenges'}), 404 
+
 
 
 

@@ -1,4 +1,6 @@
+import hashlib, binascii, os
 from flask_sqlalchemy import SQLAlchemy
+
 
 db = SQLAlchemy()
 
@@ -8,40 +10,48 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key= True)
     username = db.Column(db.String, nullable = False)
     password = db.Column(db.String, nullable = False)
-    # name = db.Column(db.String, nullable = False)
-    # email = db.Column(db.String, nullable = False)
-    # imgUrl = db.Column(db.String)
-    # might not be necessary with the completions table
-    # totalFinishedChallenges = db.Column(db.Integer, default=0)
     streak = db.Column(db.Integer, default=0)
     count_completed_challenges = db.Column(db.Integer, default=0)
     last_completed_challenge = db.Column(db.Integer, default = -1)
+    pic = db.Column(db.String, default = False)
 
 
     def __init__ (self, **kwargs):
         self.username = kwargs.get('username', '')
         self.password = kwargs.get('password', '')
-        # self.name = kwargs.get('name', 'Anonymous')
-        # self.email = kwargs.get('name', '')
-        # self.imgURL = kwargs.get('imgURL', '')
-        # self.totalFinishedChallenges = kwargs.get('totalFinishedChallenges', 0)
         self.streak = kwargs.get('streak', 0)
         self.count_completed_challenges = kwargs.get('count_completed_challenges', 0)
         self.last_completed_challenge = kwargs.get('last_completed_challenge', -1)
+        self.pic = kwargs.get('pic', -1)
     
     def serialize (self):
         return {
             'id': self.id,
             'username': self.username,
-            'password': self.password,
-            # 'name': self.name,
-            # 'email': self.email,
-            # 'imgURL': self.imgURL,
-            # 'totalFinishedChallenges': self.totalFinishedChallenges,
             'streak': self.streak,
             'count_completed_challenges': self.count_completed_challenges,
-            'last_completed_challenge': self.last_completed_challenge
+            'last_completed_challenge': self.last_completed_challenge,
+            'pic': self.pic
         }
+    
+    def hash_password(password):
+        """Hash a password for storing."""
+        salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
+        pwdhash = hashlib.pbkdf2_hmac('sha512', password.encode('utf-8'), 
+                                    salt, 100000)
+        pwdhash = binascii.hexlify(pwdhash)
+        return (salt + pwdhash).decode('ascii')
+ 
+    def verify_password(stored_password, provided_password):
+        """Verify a stored password against one provided by user"""
+        salt = stored_password[:64]
+        stored_password = stored_password[64:]
+        pwdhash = hashlib.pbkdf2_hmac('sha512', 
+                                      provided_password.encode('utf-8'), 
+                                      salt.encode('ascii'), 
+                                      100000)
+        pwdhash = binascii.hexlify(pwdhash).decode('ascii')
+        return pwdhash == stored_password
 
 class Challenge(db.Model):
     __tablename__ = "Challenges"
