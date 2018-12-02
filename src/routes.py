@@ -13,8 +13,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s' % db_filename
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 
-# weirdly not working if the environ key was made in a different directory?
-GIPHY_API_KEY = os.environ['GIPHY_API_KEY']
+# GIPHY_API_KEY = os.environ['GIPHY_API_KEY']
+GIPHY_API_KEY='Dp9D8D67rvtcpLqiMJQQZ02mxmIyuTZf'
 GIPHY_SEARCH_URL = 'http://api.giphy.com/v1/gifs/search'
 
 TIME_DELAYS = {
@@ -118,9 +118,6 @@ def get_random_challenge():
     r = Challenge.query.order_by(func.random()).limit(1).all()
     return json.dumps({'success': True, 'data': r[0].serialize()}), 200
 
-# @app.route('/api/challenges/popular_challenges/', methods=['GET'])
-# def show_popular_challenges():
-
 
 @app.route('/api/users/', methods = ['GET'])
 @swag_from('docs/get_all_users.yml')
@@ -181,8 +178,6 @@ def new_signup():
 @swag_from('docs/login_user.yml')
 def login_user():
     dat = json.loads(request.data)
-
-    # q = User.query.filter_by(username = dat.get("username")).filter_by(password = dat.get("password")).first()
     
     q = User.query.filter_by(username = dat.get("username")).first()
     
@@ -281,8 +276,6 @@ def complete_challenge():
 def get_user_completed_challenges():
     dat = json.loads(request.data)
     user_id = dat.get("user_id")
-    # session, cookies? 
-    # Leveraging the users ID from the User table so need some way of storing
 
     q = "select * from Challenges inner join Completions on Challenges.id = Completions.challenge_id where Completions.user_id = {0} ".format(user_id)
     user_completions = db.engine.execute(q)

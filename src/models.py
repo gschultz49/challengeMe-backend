@@ -28,6 +28,7 @@ class User(db.Model):
         return {
             'id': self.id,
             'username': self.username,
+            "password": self.password,
             'streak': self.streak,
             'count_completed_challenges': self.count_completed_challenges,
             'last_completed_challenge': self.last_completed_challenge,
