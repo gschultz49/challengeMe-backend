@@ -42,70 +42,70 @@ class Seeder(object):
              'text': "Learn to Tie a Square Knot",
              'timeToFinish': 'five_minutes'
             },
-            # {
-            #  'text': "Learn a Card Trick",
-            #  'timeToFinish': 'one_day'
-            # },
-            # {
-            #  'text': "Write a Letter to your Future Self",
-            #  'timeToFinish': 'one_day'
-            # },
-            # {
-            #  'text': "Find out the Meaning of your Name",
-            #  'timeToFinish': 'one_day'
-            # },
-            # {
-            #  'text': "Learn a Word in a Different Language",
-            #  'timeToFinish': 'five_minutes'
-            # },
-            # {
-            #  'text': "Listen to a Song/Genre you Never Heard Before",
-            #  'timeToFinish': 'six_hours'
-            # },
-            # {
-            #  'text': "Tell Someone You Appreciate Them",
-            #  'timeToFinish': 'six_hours'
-            # },
-            # {
-            #  'text': "Stay Off Social Media for the Day",
-            #  'timeToFinish': 'six_hours'
-            # },
-            # {
-            #  'text': "Learn to do a Perfect Push up",
-            #  'timeToFinish': 'six_hours'
-            # },
-            # {
-            #  'text': "Learn to Make a Paper Airplane",
-            #  'timeToFinish': 'six_hours'
-            # },
-            # {
-            #  'text': "Learn to Solve a Rubiks Cube",
-            #  'timeToFinish': 'six_hours'
-            # },
-            # {
-            #  'text': "Meditate for 5 minutes",
-            #  'timeToFinish': 'five_minutes'
-            # },
-            # {
-            #  'text': "Make a Bucket List",
-            #  'timeToFinish': 'five_minutes'
-            # },
-            # {
-            #  'text': "Try a New Food",
-            #  'timeToFinish': 'one_day'
-            # },
-            # {
-            #  'text': "Call Someone you Haven't Talked to in a While",
-            #  'timeToFinish': 'one_day'
-            # },
-            # {
-            #  'text': "Volunteer/Sign Up to Volunteer for Something",
-            #  'timeToFinish': 'one_day'
-            # },
-            # {
-            #  'text': "Do a Cartwheel",
-            #  'timeToFinish': 'one_day'
-            # },
+            {
+             'text': "Learn a Card Trick",
+             'timeToFinish': 'one_day'
+            },
+            {
+             'text': "Write a Letter to your Future Self",
+             'timeToFinish': 'one_day'
+            },
+            {
+             'text': "Find out the Meaning of your Name",
+             'timeToFinish': 'one_day'
+            },
+            {
+             'text': "Learn a Word in a Different Language",
+             'timeToFinish': 'five_minutes'
+            },
+            {
+             'text': "Listen to a Song/Genre you Never Heard Before",
+             'timeToFinish': 'six_hours'
+            },
+            {
+             'text': "Tell Someone You Appreciate Them",
+             'timeToFinish': 'six_hours'
+            },
+            {
+             'text': "Stay Off Social Media for the Day",
+             'timeToFinish': 'six_hours'
+            },
+            {
+             'text': "Learn to do a Perfect Push up",
+             'timeToFinish': 'six_hours'
+            },
+            {
+             'text': "Learn to Make a Paper Airplane",
+             'timeToFinish': 'six_hours'
+            },
+            {
+             'text': "Learn to Solve a Rubiks Cube",
+             'timeToFinish': 'six_hours'
+            },
+            {
+             'text': "Meditate for 5 minutes",
+             'timeToFinish': 'five_minutes'
+            },
+            {
+             'text': "Make a Bucket List",
+             'timeToFinish': 'five_minutes'
+            },
+            {
+             'text': "Try a New Food",
+             'timeToFinish': 'one_day'
+            },
+            {
+             'text': "Call Someone you Haven't Talked to in a While",
+             'timeToFinish': 'one_day'
+            },
+            {
+             'text': "Volunteer/Sign Up to Volunteer for Something",
+             'timeToFinish': 'one_day'
+            },
+            {
+             'text': "Do a Cartwheel",
+             'timeToFinish': 'one_day'
+            },
         ]
 
         self.seed_challenges(self.challenge_seeds)
