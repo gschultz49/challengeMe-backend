@@ -1,7 +1,6 @@
 import hashlib, binascii, os
 from flask_sqlalchemy import SQLAlchemy
 
-
 db = SQLAlchemy()
 
 class User(db.Model):
@@ -14,7 +13,6 @@ class User(db.Model):
     count_completed_challenges = db.Column(db.Integer, default=0)
     last_completed_challenge = db.Column(db.Integer, default = -1)
     pic = db.Column(db.String, default = False)
-
 
     def __init__ (self, **kwargs):
         self.username = kwargs.get('username', '')
@@ -60,7 +58,6 @@ class Challenge(db.Model):
     imgURL = db.Column(db.String)
     timeToFinish = db.Column(db.String)
 
-
     def __init__ (self, **kwargs):
         self.text = kwargs.get('text', 'N/A')
         self.imgURL = kwargs.get('imgURL', '')
@@ -98,5 +95,4 @@ class Completion(db.Model):
             'startTime': self.startTime,
             'toFinishTime': self.toFinishTime,
             'endFinishTime': self.endFinishTime,
-            # dont serialize the foreign key
         }

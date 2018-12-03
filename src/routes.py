@@ -71,7 +71,6 @@ def create_challenge():
     )
     db.session.add(challenge)
     db.session.commit()
-
     res = {
         'success': True,
         'data': challenge.serialize()
@@ -83,12 +82,10 @@ def create_challenge():
 @swag_from('docs/search_challenges.yml')
 def search_challenges(q):
     results = Challenge.query.filter(Challenge.text.like("%"+q+"%")).all()
-
     res = {
         'success': True,
         'data': [result.serialize() for result in results] 
     }
-
     return json.dumps(res), 200
 
 @app.route('/api/challenges/<int:challenge_id>/', methods=['DELETE'])
@@ -109,7 +106,6 @@ def delete_challenge_by_id(challenge_id):
 def get_random_challenge():
     r = Challenge.query.order_by(func.random()).limit(1).all()
     return json.dumps({'success': True, 'data': r[0].serialize()}), 200
-
 
 @app.route('/api/users/', methods = ['GET'])
 @swag_from('docs/get_all_users.yml')
@@ -156,7 +152,6 @@ def new_signup():
     )
     db.session.add(user)
     db.session.commit()
-
     res = {
         'success': True,
         'data': user.serialize()
@@ -178,7 +173,6 @@ def login_user():
         return json.dumps(res), 200
     else:
         return json.dumps({'success': False, 'error': 'Incorrect login'}), 404 
-
 
 @app.route('/api/users/completions/', methods = ['GET'])
 @swag_from('docs/get_all_completions.yml')
@@ -210,7 +204,6 @@ def start_challenge():
         'success': True,
         "data": completed.serialize()
     }
-
     return json.dumps(res), 201
 
 @app.route('/api/users/complete_challenge/', methods=['POST'])
@@ -236,18 +229,13 @@ def complete_challenge():
         endFinish = datetime.datetime.utcfromtimestamp(float(last_completed_challenge.endFinishTime)) 
         current_time = datetime.datetime.utcnow()
         one_day_away = (endFinish + datetime.timedelta(days=1))
-        
         if current_time > one_day_away:
             user.streak += 1
-
     # update users last completed challenge to this one every time
     user.last_completed_challenge = challenge_id
-
     # increment count of users completed challenges 
     user.count_completed_challenges += 1
-
     db.session.commit()
-
     return json.dumps({'success': True, 'data': completed.serialize()}), 200
 
 @app.route('/api/users/completed_challenges/', methods=['POST'])
@@ -255,10 +243,8 @@ def complete_challenge():
 def get_user_completed_challenges():
     dat = json.loads(request.data)
     user_id = dat.get("user_id")
-
     q = "select * from Challenges inner join Completions on Challenges.id = Completions.challenge_id where Completions.user_id = {0} ".format(user_id)
     user_completions = db.engine.execute(q)
-    
     serialized= []
     for row in user_completions:
         serialized.append(
@@ -282,10 +268,8 @@ def get_user_completed_challenges():
 def get_user_incomplete_challenges():
     dat = json.loads(request.data)
     user_id = dat.get("user_id")
-
     q = "select * from Challenges inner join Completions on Challenges.id = Completions.challenge_id where Completions.user_id = {0} AND Completions.endFinishTime = 'NONE' ".format(user_id)
     user_completions = db.engine.execute(q)
-    
     serialized= []
     for row in user_completions:
         serialized.append(
@@ -295,7 +279,6 @@ def get_user_incomplete_challenges():
                 "timeToFinish": row.timeToFinish
             }
         )
-
     if serialized is not None:
         res = {
             'success': True,

@@ -124,33 +124,32 @@ class Seeder(object):
             requests.post(self.LOCAL_URL + '/api/users/signup/', data=json.dumps(u))
     def seed_completions(self):
         #setup challenges
-        greg_start_second_challenge = {
+        mindy_start_second_challenge = {
             "user_id": 1,
             "challenge_id": 2,
         }
-        martha_start_first_challenge = {
+        young_start_first_challenge = {
             'user_id': 2,
             'challenge_id': 1
         }
-        greg_start_third_challenge = {
+        mindy_start_third_challenge = {
             "user_id": 1,
             "challenge_id": 3,
         }
-        greg_start_fifth_challenge = {
+        mindy_start_fifth_challenge = {
             "user_id": 1,
             "challenge_id": 5,
         }
         #start challenges
-        requests.post(self.LOCAL_URL + '/api/users/start_challenge/', data=json.dumps(greg_start_second_challenge))
-        requests.post(self.LOCAL_URL + '/api/users/start_challenge/', data=json.dumps(martha_start_first_challenge))
-        requests.post(self.LOCAL_URL + '/api/users/start_challenge/', data=json.dumps(greg_start_third_challenge))
-        requests.post(self.LOCAL_URL + '/api/users/start_challenge/', data=json.dumps(greg_start_fifth_challenge))
+        requests.post(self.LOCAL_URL + '/api/users/start_challenge/', data=json.dumps(mindy_start_second_challenge))
+        requests.post(self.LOCAL_URL + '/api/users/start_challenge/', data=json.dumps(young_start_first_challenge))
+        requests.post(self.LOCAL_URL + '/api/users/start_challenge/', data=json.dumps(mindy_start_third_challenge))
+        requests.post(self.LOCAL_URL + '/api/users/start_challenge/', data=json.dumps(mindy_start_fifth_challenge))
 
-        #finish challenges, streak should also update, 1 for both greg and martha because under 24hrs
-        requests.post(self.LOCAL_URL + '/api/users/complete_challenge/', data=json.dumps(greg_start_second_challenge))
-        requests.post(self.LOCAL_URL + '/api/users/complete_challenge/', data=json.dumps(martha_start_first_challenge))
-        requests.post(self.LOCAL_URL + '/api/users/complete_challenge/', data=json.dumps(greg_start_third_challenge))
-        requests.post(self.LOCAL_URL + '/api/users/complete_challenge/', data=json.dumps(greg_start_fifth_challenge))
+        requests.post(self.LOCAL_URL + '/api/users/complete_challenge/', data=json.dumps(mindy_start_second_challenge))
+        requests.post(self.LOCAL_URL + '/api/users/complete_challenge/', data=json.dumps(young_start_first_challenge))
+        requests.post(self.LOCAL_URL + '/api/users/complete_challenge/', data=json.dumps(mindy_start_third_challenge))
+        requests.post(self.LOCAL_URL + '/api/users/complete_challenge/', data=json.dumps(mindy_start_fifth_challenge))
 
 if __name__ == '__main__':
     Seeder()
