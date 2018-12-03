@@ -1,14 +1,24 @@
+# ChallengeMe
+
 This is the backend for the ChallengeMe application for the Cornell AppDev final hackathon course in Fall 2018
 
-To set this up
+Frontend: https://github.com/seancorc/ChallengeMe 
 
-`pip install -r requirements.txt`
+To set up the backend, first install necessary dependencies
 
-`sh run.sh`
+`pip install -r src/requirements.txt`
 
-this will set up the database with some data
-`python seed.py`
+To run the flask server
 
-if you want a fresh restart, `rm CHALLENGE.db` and re run `python seed.py`
+`python3 src/routes.py`
+
+The initial database is within the "CHALLENGEME.db" sqlite file. To reset this database, first
+
+`rm CHALLENGEME.db`
+
+then re run the seeder with  
+
+`python3 seed.py`
+
 
 
