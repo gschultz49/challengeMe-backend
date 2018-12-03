@@ -34,7 +34,6 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-
 @app.route('/api/challenges/', methods = ['GET'])
 @swag_from('docs/get_all_challenges.yml')
 def get_all_challenges():
@@ -58,22 +57,18 @@ def get_challenge_by_id(challenge_id):
 def create_challenge():
     dat = json.loads(request.data)
     text = dat.get("text")
-    
     GIPHY_SEARCH_PARAMETERS = {
         'api_key': GIPHY_API_KEY,
         'limit': 1,
         # default 
         'q': text
     }
-
     giphy_dat = requests.get(GIPHY_SEARCH_URL, params=GIPHY_SEARCH_PARAMETERS).json()
-    
     challenge = Challenge(
         text = text,
         imgURL = giphy_dat['data'][0]['embed_url'],
         timeToFinish = dat.get("timeToFinish")
     )
-
     db.session.add(challenge)
     db.session.commit()
 
@@ -96,7 +91,6 @@ def search_challenges(q):
 
     return json.dumps(res), 200
 
-
 @app.route('/api/challenges/<int:challenge_id>/', methods=['DELETE'])
 @swag_from('docs/delete_challenge_by_id.yml')
 def delete_challenge_by_id(challenge_id):
@@ -109,8 +103,6 @@ def delete_challenge_by_id(challenge_id):
     # invalid challenge id
     else:
         return json.dumps({'success': False, 'error': 'Invalid challenge ID! Cannot delete challenge'}), 404 
-
-    
 
 @app.route('/api/challenges/random/', methods=['GET'])
 @swag_from('docs/get_random_challenge.yml')
@@ -156,14 +148,12 @@ def delete_user_by_id(user_id):
 @swag_from('docs/new_signup.yml')
 def new_signup():
     dat = json.loads(request.data)
-
     user = User(
         username = dat.get("username"),
         password = User.hash_password(dat.get("password")),
         # storing images is annoying and we <3 our instructors
         pic = random.choice(list(INSTRUCTORS.values()))
     )
-
     db.session.add(user)
     db.session.commit()
 
@@ -173,17 +163,13 @@ def new_signup():
     }
     return json.dumps(res), 201
 
-
 @app.route('/api/users/login/', methods=['POST'])
 @swag_from('docs/login_user.yml')
 def login_user():
     dat = json.loads(request.data)
-    
     q = User.query.filter_by(username = dat.get("username")).first()
-    
     input_password = dat.get("password")
     user = q.serialize()
-
     if User.verify_password(user["password"], input_password):
         res = {
             'success': True,
@@ -205,12 +191,9 @@ def get_all_completions():
 @swag_from('docs/start_challenge.yml')
 def start_challenge():
     dat = json.loads(request.data)
-    
     user_id = dat.get("user_id")
     challenge_id = dat.get("challenge_id")
-
     challenge = Challenge.query.filter_by(id = challenge_id).first()
-
     completed = Completion(
         #these are all in float timestamps
         startTime = datetime.datetime.now().timestamp(),
@@ -221,10 +204,8 @@ def start_challenge():
         user_id = user_id,
         challenge_id = challenge_id,
     )
-
     db.session.add(completed)
     db.session.commit()
-
     res = {
         'success': True,
         "data": completed.serialize()
@@ -238,13 +219,11 @@ def complete_challenge():
     dat = json.loads(request.data)
     user_id = dat.get("user_id")
     challenge_id = dat.get("challenge_id")
-
     user = User.query.filter_by(id = user_id).first()
     completed = Completion.query.filter_by(user_id = user_id).filter_by(challenge_id = challenge_id).first()
-
     if completed is None:
         return json.dumps({'success': False, 'error': 'User has never started this challenge'}), 404 
-
+    
     # finish the challenge 
     completed.endFinishTime = datetime.datetime.now().timestamp()
     #will need to have an order by with this to make it such that you can do the same challenge multiple times
@@ -289,7 +268,6 @@ def get_user_completed_challenges():
                 "timeToFinish": row.timeToFinish
             }
         )
-
     if serialized is not None:
         res = {
             'success': True,
@@ -327,17 +305,14 @@ def get_user_incomplete_challenges():
     else:
         return json.dumps({'success': False, 'error': 'No Completed Challenges'}), 404 
 
-
 @app.route('/api/users/search/<string:q>', methods=['GET'])
 @swag_from('docs/search_users.yml')
 def search_users(q):
     results = User.query.filter(User.username.like("%"+q+"%")).all()
-
     res = {
         'success': True,
         'data': [result.serialize() for result in results] 
     }
-
     return json.dumps(res), 200
 
 if __name__ == '__main__':
