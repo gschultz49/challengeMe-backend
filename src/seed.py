@@ -12,13 +12,17 @@ class Seeder(object):
         }
         self.user_seeds = [
             {
-                'username': "gschultz49",
+                'username': "Mindy",
                 "password": "12345" 
             },
             {
-                "username": "martha_p",
+                "username": "Young",
                 "password": "1865"
-            }
+            },
+            {
+                "username": "Kevin",
+                "password": "applesauce"
+            },
         ]
 
         self.challenge_seeds = [ 

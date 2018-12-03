@@ -66,7 +66,7 @@ def create_challenge():
     giphy_dat = requests.get(GIPHY_SEARCH_URL, params=GIPHY_SEARCH_PARAMETERS).json()
     challenge = Challenge(
         text = text,
-        imgURL = giphy_dat['data'][0]['embed_url'],
+        imgURL = giphy_dat['data'][0]['images']['fixed_height']['url'],
         timeToFinish = dat.get("timeToFinish")
     )
     db.session.add(challenge)
